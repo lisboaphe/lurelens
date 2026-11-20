@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>Lurelens — Phishing-Mails erklärt</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f5f7fa;
+      --surface: #fff;
+      --surface-2: #fbfcfe;
+      --surface-3: #eef2f5;
+      --border: #e5eaf0;
+      --border-strong: #dce3eb;
+      --text: #172337;
+      --text-2: #49576c;
+      --muted: #69778b;
+      --faint: #8a97a8;
+      --accent: #147c74;
+      --accent-hover: #106860;
+      --accent-text: #287f78;
+      --accent-ring: #65b9ad40;
+      --navy: #101827;
+      --cyan: #79e3d1;
+      --red: #b93838;
+      --red-bg: #fae9e8;
+      --amber: #a56012;
+      --amber-bg: #fbf0dd;
+      --green: #207353;
+      --green-bg: #e8f4ee;
+      --pill-bg: #f4fbf9;
+      --pill-border: #d9e4e2;
+      --pill-text: #316c65;
+      --note-bg: #eef2f6;
+      --shadow: #17233708;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1320;
+        --surface: #141c2b;
+        --surface-2: #18212f;
+        --surface-3: #1f2a3a;
+        --border: #243044;
+        --border-strong: #2f3d52;
+        --text: #e6ebf2;
+        --text-2: #b8c3d2;
+        --muted: #8e9bb0;
+        --faint: #6f7d92;
+        --accent: #1f9586;
+        --accent-hover: #27a899;
+        --accent-text: #6fd3c4;
+        --accent-ring: #6fd3c440;
+        --navy: #0a0f19;
+        --red: #f08585;
+        --red-bg: #3a1d22;
+        --amber: #ebb064;
+        --amber-bg: #3a2a14;
+        --green: #63c99b;
+        --green-bg: #15302a;
+        --pill-bg: #13262a;
+        --pill-border: #22403f;
+        --pill-text: #8fd8c9;
+        --note-bg: #182131;
+        --shadow: #00000030;
+      }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    button, textarea { font: inherit; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    .topbar { height: 66px; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 max(24px, calc((100vw - 1180px)/2)); }
+    .brand { display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.02em; }
+    .brand-mark { width:28px; height:28px; border:1.5px solid var(--cyan); border-radius:9px 9px 9px 3px; display:grid; place-items:center; color:var(--cyan); font-size:15px; }
+    .brand-dot { color: var(--cyan); }
+    .top-right { display:flex; align-items:center; gap:16px; }
+    .lang { color:#dbe4ee; font-size:12px; font-weight:600; text-decoration:none; border:1px solid #ffffff30; border-radius:99px; padding:4px 10px; }
+    .lang:hover { border-color:var(--cyan); color:var(--cyan); }
+    .top-label { color:#aab7c8; font-size:12px; letter-spacing:.08em; text-transform:uppercase; }
+    main { max-width:1180px; margin:0 auto; padding:48px 24px 60px; }
+    .intro { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:28px; }
+    .eyebrow { color:var(--accent-text); font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; margin:0 0 10px; }
+    h1 { font-size:clamp(30px,4vw,43px); line-height:1.1; letter-spacing:-.04em; margin:0; font-weight:700; }
+    .subhead { color:var(--muted); max-width:600px; margin:12px 0 0; font-size:16px; }
+    .local-pill { display:flex; flex:0 0 auto; gap:8px; align-items:center; border:1px solid var(--pill-border); border-radius:99px; color:var(--pill-text); background:var(--pill-bg); padding:8px 12px; font-size:12px; font-weight:600; }
+    .local-pill i { width:7px; height:7px; background:#39a58c; border-radius:50%; }
+    .workspace { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(340px,.9fr); gap:20px; align-items:start; }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:16px; box-shadow:0 3px 12px var(--shadow); }
+    .input-card { padding:24px; }
+    .card-heading { display:flex; align-items:center; justify-content:space-between; margin-bottom:17px; }
+    h2 { font-size:16px; letter-spacing:-.01em; margin:0; }
+    .step { color:var(--faint); font-size:12px; }
+    .field-label { display:block; font-size:12px; font-weight:700; color:var(--text-2); margin:0 0 7px; }
+    textarea { display:block; width:100%; min-height:340px; resize:vertical; padding:15px 16px; border:1px solid var(--border-strong); border-radius:11px; background:var(--surface-2); color:var(--text); outline:none; line-height:1.6; transition:border .15s, box-shadow .15s; }
+    textarea:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-ring); }
+    textarea::placeholder { color:var(--faint); }
+    .input-note { display:flex; justify-content:space-between; gap:12px; color:var(--faint); font-size:11px; margin-top:8px; }
+    .input-note code { font-size:11px; background:var(--surface-3); padding:0 4px; border-radius:4px; }
+    .actions { display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-top:19px; }
+    .primary { background:var(--accent); color:#fff; border:0; border-radius:9px; padding:11px 17px; font-weight:650; cursor:pointer; transition:background .15s, transform .15s; }
+    .primary:hover { background:var(--accent-hover); transform:translateY(-1px); }
+    .secondary { color:var(--muted); background:transparent; border:0; padding:9px 4px; font-size:13px; font-weight:600; cursor:pointer; }
+    .secondary:hover { color:var(--accent-text); }
+    .kbd-hint { color:var(--faint); font-size:11px; margin-left:auto; }
+    .results-card { overflow:hidden; }
+    .result-top { padding:24px 24px 20px; border-bottom:1px solid var(--border); }
+    .result-title { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+    .empty-state { min-height:370px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:30px; color:var(--faint); }
+    .empty-icon { width:50px; height:50px; border:1px solid var(--border-strong); border-radius:16px; display:grid; place-items:center; font-size:22px; color:var(--accent-text); margin-bottom:16px; background:var(--surface-2); }
+    .empty-state strong { color:var(--text-2); font-size:14px; margin-bottom:5px; }
+    .empty-state p { max-width:260px; font-size:13px; margin:0; }
+    .score-row { display:flex; gap:19px; align-items:center; }
+    .score-ring { --progress:0deg; --score-color:var(--green); width:76px; height:76px; flex:0 0 auto; display:grid; place-items:center; border-radius:50%; background:conic-gradient(var(--score-color) var(--progress), var(--surface-3) 0); position:relative; }
+    .score-ring::before { content:""; position:absolute; inset:6px; background:var(--surface); border-radius:50%; }
+    .score-value { position:relative; font-size:21px; font-weight:750; letter-spacing:-.04em; color:var(--text); }
+    .risk-label { font-size:21px; font-weight:700; letter-spacing:-.025em; margin:0 0 3px; }
+    .risk-desc { color:var(--muted); font-size:12px; margin:0; }
+    .meter-wrap { margin-top:18px; }
+    .meter { height:5px; background:var(--surface-3); border-radius:6px; overflow:hidden; }
+    .meter > span { display:block; height:100%; width:0; border-radius:6px; transition:width .35s ease; }
+    .meter-labels { display:flex; justify-content:space-between; color:var(--faint); font-size:10px; margin-top:6px; }
+    .section { padding:19px 24px 22px; }
+    .section + .section { border-top:1px solid var(--border); }
+    .section-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:10px; }
+    .section-head h3 { margin:0; font-size:13px; }
+    .section-head small { color:var(--faint); font-size:11px; }
+    .count { background:var(--surface-3); color:var(--muted); border-radius:99px; padding:2px 8px; font-size:11px; }
+    .finding-list { display:grid; gap:8px; }
+    .finding { display:grid; grid-template-columns:20px 1fr; gap:9px; padding:10px 11px; background:var(--surface-2); border:1px solid var(--border); border-radius:9px; transition:border-color .15s; }
+    .finding:hover, .finding:focus-within { border-color:var(--border-strong); }
+    .finding-icon { width:18px; height:18px; display:grid; place-items:center; border-radius:50%; font-size:11px; font-weight:700; }
+    .high .finding-icon, .level.high { background:var(--red-bg); color:var(--red); }
+    .medium .finding-icon, .level.medium { background:var(--amber-bg); color:var(--amber); }
+    .low .finding-icon, .level.low { background:var(--green-bg); color:var(--green); }
+    .finding-title { display:flex; align-items:center; gap:7px; flex-wrap:wrap; margin:0 0 2px; }
+    .finding-title strong { font-size:12px; }
+    .level { font-size:10px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:1px 6px; border-radius:99px; }
+    .finding p { color:var(--muted); font-size:11px; margin:0; line-height:1.45; overflow-wrap:anywhere; }
+    .evidence { list-style:none; margin:7px 0 0; padding:0; display:grid; gap:4px; }
+    .evidence li { font-size:11px; line-height:1.45; overflow-wrap:anywhere; color:var(--text-2); }
+    .evidence q { quotes:"„" "“"; font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:10.5px; background:var(--surface-3); padding:1px 5px; border-radius:4px; }
+    .evidence .note { display:block; color:var(--muted); margin-top:1px; }
+    .evidence .more { color:var(--faint); }
+    .no-findings { color:var(--muted); background:var(--green-bg); border-radius:9px; padding:13px; font-size:12px; }
+    .preview { margin:0; max-height:280px; overflow:auto; white-space:pre-wrap; overflow-wrap:anywhere; font:12px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; color:var(--text-2); background:var(--surface-2); border:1px solid var(--border); border-radius:9px; padding:12px 13px; }
+    .preview mark { color:var(--text); border-radius:3px; padding:0 1px; transition:opacity .15s, box-shadow .15s; }
+    .preview mark.high { background:var(--red-bg); box-shadow:inset 0 -2px 0 var(--red); }
+    .preview mark.medium { background:var(--amber-bg); box-shadow:inset 0 -2px 0 var(--amber); }
+    .preview mark.low { background:var(--green-bg); box-shadow:inset 0 -2px 0 var(--green); }
+    .preview.focusing mark { opacity:.35; }
+    .preview.focusing mark.lit { opacity:1; box-shadow:0 0 0 2px var(--accent); }
+    .disclaimer { display:flex; gap:11px; color:var(--muted); background:var(--note-bg); border-radius:12px; padding:14px 16px; margin-top:20px; font-size:12px; }
+    .disclaimer b { color:var(--text-2); }
+    .disclaimer-icon { color:var(--accent-text); font-size:15px; }
+    .footer { display:flex; justify-content:space-between; color:var(--faint); font-size:11px; padding:19px 3px 0; }
+    [hidden] { display:none !important; }
+    @media (max-width:800px) { main { padding-top:32px; } .intro { align-items:flex-start; flex-direction:column; gap:15px; } .workspace { grid-template-columns:1fr; } textarea { min-height:260px; } .empty-state { min-height:250px; } }
+    @media (max-width:480px) { .top-label, .kbd-hint { display:none; } .topbar { padding:0 16px; } main { padding-left:16px; padding-right:16px; } .input-card { padding:18px; } .result-top,.section { padding-left:18px; padding-right:18px; } .input-note { flex-direction:column; gap:2px; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">✳</span><span>lurelens<span class="brand-dot">.</span></span></div>
+    <div class="top-right"><span class="top-label">E-Mail-Bedrohungsanalyse · Prototyp</span><a class="lang" href="index.html" hreflang="en" lang="en">English</a></div>
+  </header>
+  <main>
+    <section class="intro">
+      <div>
+        <p class="eyebrow">Ein klarerer erster Blick</p>
+        <h1>Will mich diese E-Mail<br>reinlegen?</h1>
+        <p class="subhead">Füge eine verdächtige Nachricht ein und sieh genau, welche Formulierungen und Links den Risikowert erhöhen – und warum. Dein Text bleibt in diesem Browser.</p>
+      </div>
+      <div class="local-pill"><i></i> Läuft lokal · kein Upload</div>
+    </section>
+    <section class="workspace" aria-label="Arbeitsbereich E-Mail-Analyse">
+      <div class="card input-card">
+        <div class="card-heading"><h2>Zu prüfende E-Mail</h2><span class="step">01 / EINGABE</span></div>
+        <label class="field-label" for="email">Betreff, Absender und Nachricht einfügen</label>
+        <textarea id="email" spellcheck="false" placeholder="Von: Kundenservice <rechnung@acme-rechnung-check.example>&#10;Betreff: Handlungsbedarf: Zahlung fehlgeschlagen&#10;&#10;Hallo, wir konnten Ihre letzte Zahlung nicht verarbeiten. Ihr Zugang wird heute gesperrt, wenn Sie Ihre Zahlungsdaten nicht bestätigen.&#10;&#10;Zahlung prüfen <http://acme-rechnung-check.example/pay>"></textarea>
+        <div class="input-note"><span>Linktext neben der echten URL lassen, z. B. <code>Jetzt zahlen &lt;https://…&gt;</code>. HTML-Quelltext geht auch.</span><span id="charCount">0 Zeichen</span></div>
+        <div class="actions"><button class="primary" id="analyze">E-Mail analysieren <span aria-hidden="true">→</span></button><button class="secondary" id="example">Beispiel laden</button><button class="secondary" id="clear">Leeren</button><span class="kbd-hint">Strg + Enter zum Analysieren</span></div>
+      </div>
+      <div class="card results-card">
+        <div class="result-top">
+          <div class="result-title"><h2>Analyse</h2><span class="step">02 / ERKLÄRUNG</span></div>
+          <div id="empty" class="empty-state"><div class="empty-icon" aria-hidden="true">⌕</div><strong>Hier erscheinen deine Ergebnisse</strong><p>Wir zitieren die verdächtigen Formulierungen und Links und erklären, warum sie wichtig sein können.</p></div>
+          <div id="summary" hidden>
+            <div class="score-row">
+              <div class="score-ring" id="ring" aria-hidden="true"><span class="score-value" id="score">0</span></div>
+              <div><p class="risk-label" id="risk">Geringeres Risiko</p><p class="risk-desc" id="riskDesc"></p></div>
+            </div>
+            <div class="meter-wrap" aria-hidden="true"><div class="meter"><span id="meterFill"></span></div><div class="meter-labels"><span>Geringeres Risiko</span><span>Höheres Risiko</span></div></div>
+          </div>
+        </div>
+        <div id="details" hidden>
+          <div class="section">
+            <div class="section-head"><h3>Gefundene Signale</h3><span class="count" id="findingCount">0</span></div>
+            <div class="finding-list" id="findingList"></div>
+          </div>
+          <div class="section" id="previewSection">
+            <div class="section-head"><h3>Wo sie vorkommen</h3><small>Fahre über ein Signal, um es hervorzuheben</small></div>
+            <pre class="preview" id="preview"></pre>
+          </div>
+        </div>
+        <p class="sr-only" id="status" aria-live="polite"></p>
+      </div>
+    </section>
+    <aside class="disclaimer"><span class="disclaimer-icon" aria-hidden="true">ⓘ</span><span><b>Nutze das als Lernhilfe, nicht als Urteil.</b> Dieser Prototyp arbeitet mit nachvollziehbaren Regeln. Er kann echtes Phishing übersehen und seriöse Mails markieren. Klicke nicht auf verdächtige Links und gib keine Zugangsdaten ein, um sie zu testen.</span></aside>
+    <div class="footer"><span>Lurelens · Lernprototyp</span><span>Nichts wird gesendet oder gespeichert</span></div>
+  </main>
+  <script>
+    const $ = s => document.querySelector(s);
+    const input = $('#email');
+    const sample = `From: ACME Kundenservice <rechnung@acme-zahlung-support.example>
+Subject: DRINGEND: Zahlung fehlgeschlagen – Ihr Konto wird heute gesperrt
+
+Sehr geehrter Kunde,
+
+wir konnten Ihre letzte Zahlung nicht verarbeiten. Ihr Konto wird in 2 Stunden gesperrt. Bitte bestätigen Sie umgehend Ihre Zahlungsdaten, um den Zugriff zu behalten.
+
+Zahlung prüfen auf acme.example <http://acme.example@198.51.100.24/verify>
+
+Die offene Rechnung finden Sie im Anhang: Rechnung_4471.zip
+
+Wenn Sie nicht sofort reagieren, werden Ihr Konto und alle Dateien endgültig gelöscht.
+
+Ihr ACME Sicherheitsteam`;
+
+    /* ---------- Referenzlisten ---------- */
+    const BRANDS = ['paypal','microsoft','office365','outlook','google','gmail','apple','icloud','amazon','netflix','adobe','docusign','dropbox','linkedin','facebook','instagram','whatsapp','dhl','fedex','hermes','ebay','telekom','vodafone','gmx','postbank','commerzbank','comdirect','dkb','n26','coinbase','binance'];
+    const LURE_WORDS = ['secure','security','support','billing','verify','verification','account','accounts','login','signin','update','service','services','team','alert','helpdesk','refund','payment','sicherheit','konto','kundenkonto','rechnung','zahlung','kundenservice','kundendienst','anmeldung','pruefung','verifizierung'];
+    const SHORTENERS = new Set(['bit.ly','tinyurl.com','t.co','goo.gl','is.gd','ow.ly','cutt.ly','rb.gy','shorturl.at','tiny.cc','buff.ly','rebrand.ly','t.ly','s.id']);
+    const SECOND_LEVEL = new Set(['co','com','org','net','gov','ac','edu']);
+    const FILE_EXT = new Set(['zip','pdf','doc','docx','docm','xls','xlsx','xlsm','exe','html','htm','php','png','jpg','jpeg','gif','txt','iso']);
+    const HOST_WORDS = 'secure|verify|billing|support|account|login|signin|sicherheit|konto|zahlung|rechnung|kundenservice|anmeldung';
+
+    /* ---------- Hilfsfunktionen ---------- */
+    const isIp = host => /^\d{1,3}(?:\.\d{1,3}){3}$/.test(host) || host.startsWith('[');
+    function registrable(host) {
+      host = host.toLowerCase().replace(/\.$/, '');
+      if (isIp(host)) return host;
+      const p = host.split('.'), n = p.length;
+      if (n <= 2) return host;
+      if (p[n-1].length === 2 && SECOND_LEVEL.has(p[n-2])) return p.slice(-3).join('.');
+      return p.slice(-2).join('.');
+    }
+    const toUrl = raw => { try { return new URL(/^www\./i.test(raw) ? 'http://' + raw : raw); } catch { return null; } };
+    const deLeet = s => s.replace(/rn/g,'m').replace(/vv/g,'w').replace(/0/g,'o').replace(/1/g,'l').replace(/3/g,'e').replace(/4/g,'a').replace(/[5$]/g,'s').replace(/7/g,'t');
+    const loose = s => s.replace(/i/g, 'l');
+    // Wortgrenzen, die auch Umlaute und ß als Buchstaben behandeln (\b tut das nicht).
+    const W = src => new RegExp('(?<![\\p{L}\\p{N}_])(?:' + src + ')(?![\\p{L}\\p{N}_])', 'giu');
+
+    // Erklärung, wenn ein Hostname eine bekannte Marke verwendet oder nachahmt.
+    function brandIssue(host) {
+      if (!host || isIp(host)) return null;
+      const reg = registrable(host);
+      if (BRANDS.includes(reg.split('.')[0])) return null; // eigene Domain der Marke oder eine Subdomain davon
+      const tokens = host.toLowerCase().split(/[.\-_]/).filter(Boolean);
+      for (const t of tokens) for (const b of BRANDS) {
+        if (t === b) return `„${b}“ steht in ${host}, aber die Domain gehört in Wahrheit zu ${reg}.`;
+        if ((t.startsWith(b) && LURE_WORDS.includes(t.slice(b.length))) || (t.endsWith(b) && LURE_WORDS.includes(t.slice(0, -b.length))))
+          return `„${t}“ verbindet einen Markennamen mit einem Servicewort, aber die Domain ist ${reg}.`;
+        const n = loose(deLeet(t)), bb = loose(b);
+        if (n === bb || (n.startsWith(bb) && LURE_WORDS.includes(n.slice(bb.length))))
+          return `„${t}“ imitiert „${b}“ mit vertauschten, ähnlich aussehenden Zeichen.`;
+      }
+      return null;
+    }
+
+    function extractLinks(text) {
+      const links = [];
+      for (const m of text.matchAll(/\b(?:https?:\/\/|www\.)[^\s<>"'`)\]]+/gi)) {
+        const raw = m[0].replace(/[.,!?;:]+$/, '');
+        links.push({ raw, start: m.index, end: m.index + raw.length, url: toUrl(raw), schemeless: /^www\./i.test(raw) });
+      }
+      return links;
+    }
+
+    // Links mit bekanntem sichtbarem Text: HTML-Anker, Markdown und „Text <url>“ im Klartext.
+    function labeledLinks(text) {
+      const out = [];
+      const push = (m, label, href) => out.push({ start: m.index, end: m.index + m[0].length, label: label.replace(/<[^>]+>/g, '').trim(), href });
+      for (const m of text.matchAll(/<a\b[^>]*?href\s*=\s*["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi)) push(m, m[2], m[1]);
+      for (const m of text.matchAll(/\[([^\]\n]{1,120})\]\(\s*((?:https?:\/\/|www\.)[^)\s]+)\s*\)/gi)) push(m, m[1], m[2]);
+      for (const m of text.matchAll(/([^\n<>]{1,80}?)\s*<\s*((?:https?:\/\/|www\.)[^>\s]+)\s*>/gi)) push(m, m[1], m[2]);
+      return out.filter(l => l.label);
+    }
+
+    function linkMismatch(l) {
+      const url = toUrl(l.href);
+      if (!url) return null;
+      const host = url.hostname.toLowerCase(), real = registrable(host);
+      const shown = (l.label.match(/\b(?:https?:\/\/)?(?:[a-z0-9-]+\.)+[a-z]{2,}\b/gi) || [])
+        .map(d => toUrl(/^https?:/i.test(d) ? d : 'http://' + d)?.hostname)
+        .filter(d => d && !FILE_EXT.has(d.split('.').pop()));
+      for (const d of shown) if (registrable(d) !== real) return `Der Text zeigt ${d}, aber der Link führt zu ${host}.`;
+      const words = l.label.toLowerCase().split(/[^a-z0-9]+/);
+      const brand = BRANDS.find(b => words.includes(b) && !host.includes(b));
+      if (brand) return `Der Text nennt ${brand}, aber der Link führt zu ${host}.`;
+      return null;
+    }
+
+    const phrase = (...res) => t => res.flatMap(re => [...t.matchAll(re)].map(m => ({ start: m.index, end: m.index + m[0].length })));
+    const linkHit = (l, note) => ({ start: l.start, end: l.end, note });
+
+    /* ---------- Regeln (nach Schwere sortiert) – deutsche und englische Formulierungen ---------- */
+    const rules = [
+      { id:'mismatch', weight:24, level:'high', title:'Linktext passt nicht zum Ziel',
+        why:'Phishing-Mails zeigen einen vertrauenswürdigen Namen oder eine bekannte Adresse, schicken dich aber woandershin. Fahre mit der Maus über einen Link (nicht klicken), um das echte Ziel zu sehen.',
+        find:(t,c) => c.labeled.map(l => { const note = linkMismatch(l); return note && { start:l.start, end:l.end, note }; }).filter(Boolean) },
+      { id:'userinfo', weight:20, level:'high', title:'Link versteckt sein Ziel hinter „@“',
+        why:'In einer Webadresse wird alles vor dem „@“ ignoriert. Ein Link wie marke.de@andere-seite öffnet in Wahrheit andere-seite.',
+        find:(t,c) => c.links.filter(l => l.url && (l.url.username || l.url.password)).map(l => linkHit(l, `Sieht aus wie ${decodeURIComponent(l.url.username)}, öffnet aber ${l.url.hostname}.`)) },
+      { id:'ip', weight:20, level:'high', title:'Link führt zu einer IP-Adresse',
+        why:'Echte Unternehmen nutzen Domainnamen. Eine Anmelde- oder Zahlungsseite unter einer reinen IP-Adresse verdient besondere Vorsicht.',
+        find:(t,c) => c.links.filter(l => l.url && isIp(l.url.hostname)).map(l => linkHit(l, `Öffnet ${l.url.hostname}.`)) },
+      { id:'credentials', weight:22, level:'high', title:'Sensible Daten werden abgefragt',
+        why:'Aufforderungen, Passwort, Zahlungsdaten oder Kontozugang zu bestätigen, können zum Diebstahl von Zugangs- oder Zahlungsdaten führen.',
+        find:phrase(
+          W('(?:bestätigen|bestätige|verifizieren|verifiziere|aktualisieren|aktualisiere|überprüfen|überprüfe|validieren|hinterlegen|erneut eingeben)[^\\n]{0,70}?(?:Passwort|Kennwort|Zugangsdaten|Anmeldedaten|Login|Konto|Kundenkonto|Kontodaten|Kontoinformationen|Zahlungsdaten|Zahlungsinformationen|Zahlungsmethode|Bankdaten|Bankverbindung|Kreditkarte|Kreditkartennummer|Kreditkartendaten|IBAN|PIN|TAN)|(?:Passwort|Kennwort|Zugangsdaten|Anmeldedaten|Kontodaten|Zahlungsdaten|Bankdaten|Bankverbindung|Kreditkartendaten|Kreditkartennummer|IBAN|PIN|TAN)[^\\n]{0,70}?(?:bestätigen|verifizieren|aktualisieren|überprüfen|angeben|eingeben|hinterlegen)'),
+          /\b(?:verify|confirm|update|validate|re-?enter)\b[^\n]{0,70}?\b(?:password|passcode|credentials|log ?in|sign[- ]?in|billing(?: details| information)?|payment (?:details|information|method)|account (?:details|information)|card (?:number|details)|bank (?:details|account)|social security)\b|\b(?:password|passcode|credentials|card number|bank details|billing details|social security)\b[^\n]{0,70}?\b(?:verify|confirm|update|provide|enter|submit)\b/gi) },
+      { id:'host', weight:18, level:'high', title:'Link nutzt einen ungewöhnlichen oder nachgeahmten Hostnamen',
+        why:'Nachgeahmte oder mit Schlagwörtern gespickte Hostnamen können eine vertraute Marke imitieren und dich trotzdem woandershin schicken.',
+        find:(t,c) => c.links.filter(l => l.url && !isIp(l.url.hostname)).map(l => {
+          const h = l.url.hostname.toLowerCase();
+          const note = h.includes('xn--') ? `${h} nutzt Punycode (xn--), womit sich ähnlich aussehende Buchstaben tarnen lassen.`
+            : brandIssue(h)
+            || (h.split('.').length > 4 ? `${h} hat viele Subdomain-Ebenen, hinter denen sich die echte Domain (${registrable(h)}) versteckt.`
+            : new RegExp(`(?:${HOST_WORDS})-|-(?:${HOST_WORDS})\\b`).test(h) ? `${h} mischt Servicewörter wie „konto“ oder „login“ in den Namen.` : null);
+          return note && linkHit(l, note);
+        }).filter(Boolean) },
+      { id:'shortlink', weight:16, level:'medium', title:'Link nutzt einen URL-Kürzer',
+        why:'Gekürzte Links verbergen das Ziel, sodass du kaum prüfen kannst, wohin sie führen.',
+        find:(t,c) => c.links.filter(l => l.url && SHORTENERS.has(l.url.hostname.replace(/^www\./, ''))).map(l => linkHit(l)) },
+      { id:'urgency', weight:15, level:'medium', title:'Dringende oder drohende Sprache',
+        why:'Betrüger erzeugen Zeitdruck oder drohen mit Kontosperrung, damit du handelst, bevor du in Ruhe nachdenkst.',
+        find:phrase(
+          W('dringend|eilt|sofort|sofortige?|umgehend|unverzüglich|schnellstmöglich|innerhalb (?:von )?\\d+ (?:Stunden?|Std\\.?|Minuten?|Min\\.?|Tagen?)|in (?:den nächsten )?\\d+ (?:Stunden|Std\\.?|Minuten|Min\\.?)|(?:läuft|endet) (?:heute|bald) ab|(?:noch )?heute (?:gesperrt|gelöscht|deaktiviert|geschlossen)|gesperrt|deaktiviert|eingeschränkt|endgültig gelöscht|unwiderruflich gelöscht|letzte (?:Mahnung|Warnung|Erinnerung|Chance|Aufforderung)|letztmalig'),
+          /\b(?:urgent(?:ly)?|immediately|right away|act now|asap|within \d+ (?:hours?|hrs?|minutes?|mins?|days?)|in (?:the next )?\d+ (?:hours?|hrs?|minutes?|mins?)|(?:expires?|expiring|ends|closes) (?:today|tonight|soon)|(?:suspended|deactivated|disabled|locked|terminated|closed|deleted) (?:today|now)|suspended|deactivated|permanently deleted|final (?:notice|warning|reminder)|last (?:warning|chance)|failure to (?:respond|comply|act))\b/gi) },
+      { id:'money', weight:12, level:'medium', title:'Druck mit Zahlung oder Gewinn',
+        why:'Unerwartete Zahlungsforderungen, Rückerstattungen oder Gewinne sind typische Köder, um Menschen in einen Betrug zu ziehen.',
+        find:phrase(
+          W('Rückerstattung(?:en)?|gewonnen|Gewinner(?:in)?|Gewinnspiel|Lotterie|Gutscheinkarten?|Geschenkkarten?|Überweisung|Bitcoin|Krypto(?:währung)?|Zahlung (?:fehlgeschlagen|abgelehnt|nicht erfolgreich)|(?:offene|ausstehende|überfällige|unbezahlte) (?:Rechnung|Zahlung|Forderung|Betrag)|Mahnung|Mahngebühr(?:en)?|Inkasso|Pfändung'),
+          /\b(?:refunds?|prize|you(?:'ve|’ve| have)? won|winner|lottery|gift ?cards?|wire transfer|bitcoin|crypto(?:currency)?|payment (?:failed|declined|unsuccessful)|(?:overdue|unpaid|outstanding) (?:invoice|balance|payment)|invoice (?:overdue|past due)|claim your (?:reward|prize|refund))\b/gi) },
+      { id:'attachment', weight:10, level:'medium', title:'Riskanter Anhang oder Dateiaufforderung',
+        why:'Archive, ausführbare Dateien, Office-Dokumente mit Makros und HTML-Dateien werden oft genutzt, um Schadsoftware oder gefälschte Anmeldeseiten zu verbreiten.',
+        find:(t,c) => phrase(
+          /\b[\w-]+\.(?:exe|scr|vbs|bat|cmd|msi|jar|docm|xlsm|pptm|iso|img|zip|rar|7z|html?)\b/gi,
+          W('Makros aktivieren|aktivieren Sie (?:die )?(?:Makros|Inhalte|Bearbeitung)|aktiviere (?:die )?(?:Makros|Inhalte|Bearbeitung)|Inhalt aktivieren|Bearbeitung aktivieren|(?:öffnen|öffne|herunterladen|lade) (?:Sie )?(?:die |den )?(?:angehängte |beigefügte )?(?:Datei|Anlage|Anhang|Dokument)'),
+          /\benable (?:macros|content|editing)\b|\b(?:open|download|run) the (?:attached )?(?:file|attachment|document)\b/gi)(t)
+          .filter(h => !c.links.some(l => h.start < l.end && h.end > l.start)) },
+      { id:'sender', weight:10, level:'medium', title:'Absenderdomain klingt nach Marke',
+        why:'Jeder kann eine Domain registrieren, die einen Namen mit „rechnung“ oder „support“ kombiniert oder Buchstaben vertauscht, um eine Marke nachzuahmen. Beides beweist nicht, dass der Absender ist, wer er vorgibt zu sein.',
+        find:t => {
+          const m = /^[ \t]*(?:From|Von):[^\n]*?@([a-z0-9.-]+\.[a-z]{2,})/im.exec(t) || /[\w.+-]+@([a-z0-9.-]+\.[a-z]{2,})/i.exec(t);
+          if (!m) return [];
+          const domain = m[1].toLowerCase(), start = m.index + m[0].length - m[1].length;
+          const note = brandIssue(domain) || (/[a-z0-9]-(?:secure|security|support|billing|verify|account|accounts|login|service|team|alert|update|sicherheit|konto|zahlung|rechnung|kundenservice)\b|\b(?:secure|security|support|billing|verify|account|login|sicherheit|konto|zahlung|rechnung|kundenservice)-[a-z0-9]/.test(registrable(domain))
+            ? `${domain} kombiniert einen Namen mit Servicewörtern wie „rechnung“ oder „support“.` : null);
+          return note ? [{ start, end: start + domain.length, note }] : [];
+        } },
+      { id:'http', weight:8, level:'low', title:'Link nutzt kein HTTPS',
+        why:'Die Verbindung ist nicht verschlüsselt. HTTPS allein beweist aber nicht, dass eine Seite vertrauenswürdig ist.',
+        find:(t,c) => c.links.filter(l => l.url && !l.schemeless && l.url.protocol === 'http:').map(l => linkHit(l)) },
+      { id:'generic', weight:7, level:'low', title:'Allgemeine Anrede',
+        why:'Eine unpersönliche Anrede kann auf Massenversand hindeuten. Viele seriöse E-Mails, gerade geschäftliche, nutzen sie aber auch.',
+        find:phrase(
+          W('Sehr geehrte[r]? (?:Kunde|Kundin|Kund\\*in|Kunden|Nutzer(?:in)?|Benutzer(?:in)?|Mitglied|Kontoinhaber(?:in)?|Damen und Herren)|Liebe[r]? (?:Kunde|Kundin|Nutzer(?:in)?|Benutzer(?:in)?|Mitglied)|Hallo (?:Kunde|Kundin|Nutzer|Benutzer)'),
+          /\b(?:dear (?:customer|user|client|member|account holder|email user|valued (?:customer|member)|sir(?:\s*\/\s*|\s+or\s+)madam|sir|madam)|valued customer|hello user)\b/gi) }
+    ];
+    const LEVEL_RANK = { low:1, medium:2, high:3 };
+    const LEVEL_NAME = { low:'Niedrig', medium:'Mittel', high:'Hoch' };
+
+    function analyze(text) {
+      const ctx = { links: extractLinks(text), labeled: labeledLinks(text) };
+      const findings = [];
+      for (const rule of rules) {
+        let hits = [];
+        try { hits = rule.find(text, ctx); } catch { hits = []; }
+        if (hits.length) findings.push({ ...rule, hits });
+      }
+      const score = Math.min(100, findings.reduce((sum, f) => sum + f.weight, 0));
+      return { text, score, findings };
+    }
+
+    /* ---------- Rendering ---------- */
+    const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+    const clip = (s, max = 72) => { s = s.replace(/\s+/g, ' ').trim(); return s.length > max ? s.slice(0, max - 1) + '…' : s; };
+
+    function renderPreview(text, findings) {
+      const pre = $('#preview');
+      pre.replaceChildren();
+      const ranges = findings.flatMap(f => f.hits.map(h => ({ ...h, id: f.id, level: f.level, title: f.title })));
+      const points = [...new Set([0, text.length, ...ranges.flatMap(r => [r.start, r.end])])].sort((a, b) => a - b);
+      for (let i = 0; i < points.length - 1; i++) {
+        const a = points[i], b = points[i + 1], chunk = text.slice(a, b);
+        const cover = ranges.filter(r => r.start <= a && r.end >= b);
+        if (!cover.length) { pre.append(chunk); continue; }
+        const top = cover.reduce((x, y) => LEVEL_RANK[y.level] > LEVEL_RANK[x.level] ? y : x);
+        const mark = el('mark', top.level, chunk);
+        mark.dataset.rules = [...new Set(cover.map(r => r.id))].join(' ');
+        mark.title = [...new Set(cover.map(r => r.title))].join(' · ');
+        pre.append(mark);
+      }
+    }
+
+    function spotlight(id) {
+      const pre = $('#preview');
+      pre.classList.toggle('focusing', !!id);
+      let first = null;
+      pre.querySelectorAll('mark').forEach(m => {
+        const on = !!id && m.dataset.rules.split(' ').includes(id);
+        m.classList.toggle('lit', on);
+        if (on && !first) first = m;
+      });
+      if (first) {
+        const top = first.offsetTop - pre.offsetTop;
+        if (top < pre.scrollTop || top > pre.scrollTop + pre.clientHeight - 24) pre.scrollTo({ top: Math.max(0, top - 40), behavior: 'smooth' });
+      }
+    }
+
+    function render(result) {
+      const { text, score, findings } = result;
+      $('#empty').hidden = true;
+      $('#summary').hidden = false;
+      $('#details').hidden = false;
+      const band = score >= 55 ? { name:'Hohes Risiko', color:'var(--red)', desc:'Mehrere starke Signale gefunden. Klicke keine Links an und prüfe die Nachricht über einen vertrauenswürdigen Weg.' }
+        : score >= 25 ? { name:'Vorsicht', color:'var(--amber)', desc:'Einige Warnzeichen gefunden. Prüfe Absender und Links über einen vertrauenswürdigen Weg.' }
+        : { name:'Geringeres Risiko', color:'var(--green)', desc: findings.length ? 'Nur wenige schwache Signale. Der Wert kann nicht belegen, dass die E-Mail sicher ist.' : 'Keine starken Signale gefunden. Der Wert kann nicht belegen, dass die E-Mail sicher ist.' };
+      $('#score').textContent = score;
+      $('#risk').textContent = band.name;
+      $('#risk').style.color = band.color;
+      $('#riskDesc').textContent = band.desc;
+      const ring = $('#ring'); ring.style.setProperty('--progress', `${score * 3.6}deg`); ring.style.setProperty('--score-color', band.color);
+      const fill = $('#meterFill'); fill.style.width = `${score}%`; fill.style.background = band.color;
+      $('#findingCount').textContent = String(findings.length);
+      $('#status').textContent = `Risikowert ${score} von 100, ${band.name}, ${findings.length} Signal${findings.length === 1 ? '' : 'e'} gefunden.`;
+
+      const list = $('#findingList');
+      list.replaceChildren();
+      $('#previewSection').hidden = !findings.length;
+      if (!findings.length) {
+        list.append(el('div', 'no-findings', 'Keine Regel hat angeschlagen. Ein sauberes Ergebnis heißt nicht, dass die Nachricht echt ist.'));
+        return;
+      }
+      renderPreview(text, findings);
+      for (const f of findings) {
+        const item = el('div', `finding ${f.level}`);
+        item.tabIndex = 0;
+        const icon = el('span', 'finding-icon', f.level === 'low' ? '·' : '!');
+        icon.setAttribute('aria-hidden', 'true');
+        const body = el('div');
+        const head = el('div', 'finding-title');
+        head.append(el('strong', null, f.title), el('span', `level ${f.level}`, LEVEL_NAME[f.level]));
+        const ev = el('ul', 'evidence');
+        const seen = new Set();
+        const unique = f.hits.filter(h => { const k = text.slice(h.start, h.end).toLowerCase() + (h.note || ''); return !seen.has(k) && seen.add(k); });
+        unique.slice(0, 3).forEach(h => {
+          const li = el('li');
+          li.append(el('q', null, clip(text.slice(h.start, h.end))));
+          if (h.note) li.append(el('span', 'note', h.note));
+          ev.append(li);
+        });
+        if (unique.length > 3) ev.append(el('li', 'more', `+${unique.length - 3} weitere unten markiert`));
+        body.append(head, el('p', null, f.why), ev);
+        item.append(icon, body);
+        item.addEventListener('mouseenter', () => spotlight(f.id));
+        item.addEventListener('mouseleave', () => spotlight(null));
+        item.addEventListener('focus', () => spotlight(f.id));
+        item.addEventListener('blur', () => spotlight(null));
+        list.append(item);
+      }
+    }
+
+    function reset() {
+      analyzed = false;
+      $('#empty').hidden = false;
+      $('#summary').hidden = true;
+      $('#details').hidden = true;
+      $('#status').textContent = '';
+    }
+
+    /* ---------- Events ---------- */
+    let analyzed = false, timer;
+    function run() {
+      const value = input.value.trim();
+      if (!value) { reset(); input.focus(); return; }
+      analyzed = true;
+      render(analyze(value));
+    }
+    input.addEventListener('input', () => {
+      $('#charCount').textContent = `${input.value.length.toLocaleString('de-DE')} Zeichen`;
+      if (!analyzed) return;
+      clearTimeout(timer);
+      timer = setTimeout(run, 250); // Ergebnisse nach einer Analyse mit Änderungen synchron halten
+    });
+    input.addEventListener('keydown', e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); run(); } });
+    $('#analyze').addEventListener('click', run);
+    $('#example').addEventListener('click', () => { input.value = sample; input.dispatchEvent(new Event('input')); run(); });
+    $('#clear').addEventListener('click', () => { input.value = ''; input.dispatchEvent(new Event('input')); reset(); input.focus(); });
+  </script>
+</body>
+</html>
