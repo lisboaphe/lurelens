@@ -18,7 +18,9 @@ Everything runs in the browser: no build step, no dependencies, and nothing is u
 
 ## Run it
 
-Open `index.html` in a browser.
+Live demo: https://lisboaphe.github.io/lurelens/ ([Deutsch](https://lisboaphe.github.io/lurelens/index.de.html))
+
+Or open `index.html` locally in a browser.
 
 ## Limits
 
